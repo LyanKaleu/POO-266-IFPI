@@ -1,0 +1,80 @@
+from datetime import datetime
+from Gato3 import Gato
+
+
+class Pessoa:
+    def __init__(self, cpf, nome, data_nascimento, endereco, fone):
+        self.__cpf = cpf
+        self.__nome = nome
+        self.__data_nascimento = data_nascimento
+        self.__endereco = endereco
+        self.__fone = fone
+        self.__gato = None
+
+    def calcular_idade(self):
+        data_nascimento = datetime.strptime(self.__data_nascimento, "%d/%m/%Y")
+        data_atual = datetime.now()
+        anos = data_atual.year - data_nascimento.year
+        if (data_atual.month, data_atual.day) < (data_nascimento.month, data_nascimento.day):
+            anos -= 1
+        return anos
+
+    def adotar_gato(self, gato):
+        if type(gato) == Gato and gato.cadastrar_dono(self) and self.calcular_idade() >= 16:
+            print("Adoção realizada com sucesso!")
+            self.__gato = gato
+        else:
+            print("Não foi possível realizar a adoção!")
+
+    @property
+    def cpf(self):
+        return self.__cpf
+
+    @cpf.setter
+    def cpf(self, cpf):
+        if len(cpf) != 11:
+            raise ValueError("CPF inválido!")
+        self.__cpf = cpf
+
+    @property
+    def nome(self):
+        return self.__nome
+
+    @nome.setter
+    def nome(self, nome):
+        self.__nome = nome
+
+    @property
+    def data_nascimento(self):
+        return self.__data_nascimento
+
+    @data_nascimento.setter
+    def data_nascimento(self, data_nascimento):
+        data_nascimento = datetime.strptime(data_nascimento, "%d/%m/%Y")
+        if data_nascimento.year > datetime.now().year:
+            raise ValueError("Data de nascimento inválida!")
+        self.__data_nascimento = data_nascimento
+
+    @property
+    def endereco(self):
+        return self.__endereco
+
+    @endereco.setter
+    def endereco(self, endereco):
+        self.__endereco = endereco
+
+    @property
+    def fone(self):
+        return self.__fone
+
+    @fone.setter
+    def fone(self, fone):
+        self.__fone = fone
+
+    @property
+    def gato(self):
+        return self.__gato
+
+    @gato.setter
+    def gato(self, gato):
+        self.__gato = gato
