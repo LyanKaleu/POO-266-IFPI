@@ -35,6 +35,9 @@ class Time:
     def __init__(self, nome):
         self.__nome = nome
         self.__jogadores = []
+        self.vitorias = 0
+        self.empates = 0
+        self.derrotas = 0
 
     @property
     def nome(self):
@@ -86,6 +89,94 @@ class Time:
                 print(f"{jogador}\n")
         else:
             print(f"Não há jogadores no time {self.__nome}!\n")
+
+    def __str__(self):
+        return f'\nTime: {self.__nome}\nVitórias: {self.vitorias}\nEmpates: {self.empates}\nDerrotas: {self.derrotas}\n'
+
+class Campeonato:
+    def __init__(self, nome):
+        self.__nome = nome
+        self.__times = []
+        self.__partidas = []
+        self.__numero_times = 0 # Atributo para contar o número de times
+
+    @property
+    def nome(self):
+        return self.__nome
+    
+    @nome.setter
+    def nome(self, nome):
+        self.__nome = nome
+
+    @property
+    def times(self):
+        return self.__times
+    
+    @times.setter
+    def times(self, times):
+        self.__times = times
+
+    @property
+    def partidas(self):
+        return self.__partidas
+    
+    @partidas.setter
+    def partidas(self, partidas):
+        self.__partidas = partidas
+
+    @property
+    def numero_times(self):
+        return self.__numero_times
+    
+    @numero_times.setter
+    def numero_times(self, numero_times):
+        self.__numero_times = numero_times
+
+    def adicionar_time(self, time):
+        if time not in self.__times:
+            self.__times.append(time)
+            self.__numero_times += 1
+            print(f"\nTime {time.nome} adicionado ao campeonato {self.__nome}!\n")
+        else:
+            print(f"\nErro ao adicionar! O time {time.nome} já está no campeonato {self.__nome}!\n")
+
+    def registrar_partida(self, time_casa, time_visitante, placar_time_casa, placar_time_visitante):
+        if time_casa in self.__times and time_visitante in self.__times:
+            partida = (time_casa, time_visitante, placar_time_casa, placar_time_visitante)
+            self.__partidas.append(partida)
+            print(f"\nPartida registrada: {time_casa.nome} {placar_time_casa} x {placar_time_visitante} {time_visitante.nome}\n")
+
+            if placar_time_casa > placar_time_visitante:
+                time_casa.vitorias += 1
+                time_visitante.derrotas += 1
+                print(f"{time_casa.nome} venceu!\n")
+            elif placar_time_casa < placar_time_visitante:
+                time_visitante.vitorias += 1
+                time_casa.derrotas += 1
+                print(f"{time_visitante.nome} venceu!\n")
+            else:
+                time_casa.empates += 1
+                time_visitante.empates += 1
+                print("A partida terminou em empate!\n")
+        else:
+            print("\nErro ao registrar partida! Um ou ambos os times não fazem parte deste campeonato!\n")
+
+    def mostrar_times(self):
+        if self.__times:
+            print(f"\nTimes no campeonato {self.__nome} ({self.__numero_times} times):")
+            for time in self.__times:
+                print(f"\t-> {time.nome}")
+        else:
+            print(f"\nNão há times no campeonato {self.__nome}!\n")
+
+    def mostrar_partidas(self):
+        if self.__partidas:
+            print(f"\nPartidas no campeonato {self.__nome}:")
+            for partida in self.__partidas:
+                time_casa, time_visitante, placa_time_casa, placar_time_visitante = partida
+                print(f"{time_casa.nome} {placa_time_casa} x {placar_time_visitante} {time_visitante.nome}")
+        else:
+            print(f"\nNão há partidas registradas no campeonato {self.__nome}\n")
     
 
 # Função main para teste
@@ -136,6 +227,32 @@ def main():
     bot.mostrar_jogadores()
     cor.mostrar_jogadores()
     cam.mostrar_jogadores()
+    
+    # Criando instância do campeonato
+    campeonato = Campeonato("Brasileirão 2024")
+
+    # Adicionando times ao campeonato
+    campeonato.adicionar_time(fla)
+    campeonato.adicionar_time(bot)
+    campeonato.adicionar_time(cor)
+    campeonato.adicionar_time(cam)
+
+    # Mostrando times no campeonato
+    campeonato.mostrar_times()
+
+    # Registrando partidas
+    campeonato.registrar_partida(fla, bot, 3, 2)
+    campeonato.registrar_partida(cor, cam, 1, 1)
+    campeonato.registrar_partida(cor, bot, 0, 3)
+
+    # Mostrando partidas registradas
+    campeonato.mostrar_partidas()
+
+    # Mostrando estatísticas dos times
+    print(fla)
+    print(bot)
+    print(cor)
+    print(cam)
 
 if __name__ == '__main__':
     main()
