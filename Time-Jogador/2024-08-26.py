@@ -1,16 +1,16 @@
 class Jogador:
-    def __init__(self, nome, idade):
-        self.__nome = nome
+    def __init__(self, nome_jogador, idade):
+        self.__nome_jogador = nome_jogador
         self.__idade = idade
         self.__time = None # Jogador inicialmente sem time
 
     @property
-    def nome(self):
-        return self.__nome
+    def nome_jogador(self):
+        return self.__nome_jogador
 
-    @nome.setter
+    @nome_jogador.setter
     def nome(self, nome):
-        self.__nome = nome
+        self.__nome_jogador = nome
 
     @property
     def idade(self):
@@ -29,23 +29,23 @@ class Jogador:
         self.__time = time
 
     def __str__(self):
-        return f"\t\n-> Nome: {self.__nome}\n-> Idade: {self.__idade}\n-> Time atual: {self.__time.nome}\n"
+        return f"\t\n-> Nome: {self.__nome_jogador}\n-> Idade: {self.__idade}\n-> Time atual: {self.__time.nome_time}\n"
     
 class Time:
-    def __init__(self, nome):
-        self.__nome = nome
+    def __init__(self, nome_time):
+        self.__nome_time = nome_time
         self.__jogadores = []
         self.vitorias = 0
         self.empates = 0
         self.derrotas = 0
 
     @property
-    def nome(self):
-        return self.__nome
+    def nome_time(self):
+        return self.__nome_time
     
-    @nome.setter
-    def nome(self, nome):
-        self.__nome = nome
+    @nome_time.setter
+    def nome_time(self, nome):
+        self.__nome_time = nome
 
     @property
     def jogadores(self):
@@ -59,46 +59,46 @@ class Time:
         if jogador.time is None:
             jogador.time = self
             self.__jogadores.append(jogador)
-            print(f"\nO jogador {jogador.nome} foi contratado ao time {self.__nome}!\n")
+            print(f"\nO jogador {jogador.nome_jogador} foi contratado ao time {self.__nome_time}!\n")
         else:
-            print(f"\nO jogador {jogador.nome} já pertence ao time {jogador.time.nome}!\n")
+            print(f"\nO jogador {jogador.nome_jogador} já pertence ao time {jogador.time.nome_time}!\n")
         
     def excluir_jogador(self, jogador):
         if jogador in self.__jogadores:
             self.__jogadores.remove(jogador)
             jogador.time = None
-            print(f"\nO jogador {jogador.nome} foi removido do time {self.__nome}!\n")
+            print(f"\nO jogador {jogador.nome_jogador} foi removido do time {self.__nome_time}!\n")
         else:
-            print(f"\nErro ao remover! O jogador {jogador.nome} não está no time {self.__nome}!\n")
+            print(f"\nErro ao remover! O jogador {jogador.nome_jogador} não está no time {self.__nome_time}!\n")
 
     def transferir_jogador(self, jogador, time_destino):
         if jogador in self.__jogadores and jogador.idade >= 18:
             self.excluir_jogador(jogador)
             time_destino.adicionar_jogador(jogador)
-            print(f'\nO jogador {jogador.nome} foi transderido para o time {time_destino.nome}!\n')
+            print(f'\nO jogador {jogador.nome_jogador} foi transderido para o time {time_destino.nome_time}!\n')
         else:
             if jogador.idade < 18:
-                print(f"\nO jogador {jogador.nome} não pode ser transferido porque é menor de idade!\n")
+                print(f"\nO jogador {jogador.nome_jogador} não pode ser transferido porque é menor de idade!\n")
             else:
-                print(f"\nO jogador {jogador.nome} não pode ser transferido porque não pertence ao time {self.__nome}!\n")
+                print(f"\nO jogador {jogador.nome_jogador} não pode ser transferido porque não pertence ao time {self.__nome_time}!\n")
 
     def mostrar_jogadores(self):
         if self.__jogadores:
-            print(f"\nLISTA DE JOGADORES DO TIME {self.__nome}")
+            print(f"\nLISTA DE JOGADORES DO TIME {self.__nome_time}")
             for jogador in self.__jogadores:
                 print(f"{jogador}\n")
         else:
-            print(f"Não há jogadores no time {self.__nome}!\n")
+            print(f"Não há jogadores no time {self.__nome_time}!\n")
 
     def __str__(self):
-        return f'\nTime: {self.__nome}\nVitórias: {self.vitorias}\nEmpates: {self.empates}\nDerrotas: {self.derrotas}\n'
+        return f'\nTime: {self.__nome_time}\nVitórias: {self.vitorias}\nEmpates: {self.empates}\nDerrotas: {self.derrotas}\n'
 
 class Campeonato:
-    def __init__(self, nome):
+    def __init__(self, nome, numero_times):
         self.__nome = nome
-        self.__times = []
+        self.__times = {}
         self.__partidas = []
-        self.__numero_times = 0 # Atributo para contar o número de times
+        self.__numero_times = numero_times
 
     @property
     def nome(self):
@@ -133,28 +133,31 @@ class Campeonato:
         self.__numero_times = numero_times
 
     def adicionar_time(self, time):
-        if time not in self.__times:
-            self.__times.append(time)
-            self.__numero_times += 1
-            print(f"\nTime {time.nome} adicionado ao campeonato {self.__nome}!\n")
+        if time not in self.__times and len(self.__times) + 1 <= self.__numero_times:
+            self.__times[time.nome_time] = 0
+            print(f"\nTime {time.nome_time} adicionado ao campeonato {self.__nome}!\n")
         else:
-            print(f"\nErro ao adicionar! O time {time.nome} já está no campeonato {self.__nome}!\n")
+            print(f"\nErro ao adicionar! O time {time.nome_time} já está no campeonato {self.__nome} ou extrapolou o limite do número máximo de times!\n")
 
     def registrar_partida(self, time_casa, time_visitante, placar_time_casa, placar_time_visitante):
-        if time_casa in self.__times and time_visitante in self.__times:
+        if time_casa.nome_time in self.__times and time_visitante.nome_time in self.__times:
             partida = (time_casa, time_visitante, placar_time_casa, placar_time_visitante)
             self.__partidas.append(partida)
-            print(f"\nPartida registrada: {time_casa.nome} {placar_time_casa} x {placar_time_visitante} {time_visitante.nome}\n")
+            print(f"\nPartida registrada: {time_casa.nome_time} {placar_time_casa} x {placar_time_visitante} {time_visitante.nome_time}\n")
 
             if placar_time_casa > placar_time_visitante:
+                self.__times[time_casa.nome_time] += 3
                 time_casa.vitorias += 1
                 time_visitante.derrotas += 1
-                print(f"{time_casa.nome} venceu!\n")
+                print(f"{time_casa.nome_time} venceu!\n")
             elif placar_time_casa < placar_time_visitante:
+                self.__times[time_visitante.nome_time] += 3
                 time_visitante.vitorias += 1
                 time_casa.derrotas += 1
-                print(f"{time_visitante.nome} venceu!\n")
+                print(f"{time_visitante.nome_time} venceu!\n")
             else:
+                self.__times[time_casa.nome_time] += 1
+                self.__times[time_visitante.nome_time] += 1
                 time_casa.empates += 1
                 time_visitante.empates += 1
                 print("A partida terminou em empate!\n")
@@ -164,8 +167,8 @@ class Campeonato:
     def mostrar_times(self):
         if self.__times:
             print(f"\nTimes no campeonato {self.__nome} ({self.__numero_times} times):")
-            for time in self.__times:
-                print(f"\t-> {time.nome}")
+            for time in self.__times.keys():
+                print(f"\t-> {time}")
         else:
             print(f"\nNão há times no campeonato {self.__nome}!\n")
 
@@ -174,10 +177,43 @@ class Campeonato:
             print(f"\nPartidas no campeonato {self.__nome}:")
             for partida in self.__partidas:
                 time_casa, time_visitante, placa_time_casa, placar_time_visitante = partida
-                print(f"{time_casa.nome} {placa_time_casa} x {placar_time_visitante} {time_visitante.nome}")
+                print(f"{time_casa.nome_time} {placa_time_casa} x {placar_time_visitante} {time_visitante.nome_time}")
         else:
             print(f"\nNão há partidas registradas no campeonato {self.__nome}\n")
-    
+
+    def mostrar_classificacao(self):
+        print(f"\nClassificação do campeonato {self.__nome}:")
+        
+        def calcular_pontuacao(vitorias, empates):
+            return vitorias * 3 + empates
+        
+        times = list(self.__times.keys())
+        pontuacoes = list(self.__times.values())
+
+        classificacao = []
+        for i in range(len(times)):
+            time_nome = times[i]
+            pontuacao = pontuacoes[i]
+            vitorias = pontuacao // 3
+            empates = pontuacao % 3
+            pontuacao_calculada = calcular_pontuacao(vitorias, empates)
+            classificacao.append((time_nome, pontuacao_calculada))
+
+        def obter_pontuacao(item):
+            return item[1]
+        
+        classificacao.sort(key=obter_pontuacao, reverse=True)
+
+        print(f"{'Posição':<10} {'Time':<20} {'Pontuação':<10}")
+        print('-' * 40)
+
+        for posicao, (time, pontuacao) in enumerate(classificacao, start=1):
+            print(f"{posicao:<10} {time:<20} {pontuacao:<10}")
+
+        if len(self.__times) < self.__numero_times:
+            for posicao in range(len(self.__times) + 1, self.__numero_times + 1):
+                print(f"{posicao:<10} {'---':<20} {'---':<10}")
+
 
 # Função main para teste
 def main():
@@ -229,7 +265,7 @@ def main():
     cam.mostrar_jogadores()
     
     # Criando instância do campeonato
-    campeonato = Campeonato("Brasileirão 2024")
+    campeonato = Campeonato("Brasileirão 2024", 4)
 
     # Adicionando times ao campeonato
     campeonato.adicionar_time(fla)
@@ -239,6 +275,9 @@ def main():
 
     # Mostrando times no campeonato
     campeonato.mostrar_times()
+
+    # Mostrando classificação dos times antes das partidas
+    campeonato.mostrar_classificacao()
 
     # Registrando partidas
     campeonato.registrar_partida(fla, bot, 3, 2)
@@ -253,6 +292,9 @@ def main():
     print(bot)
     print(cor)
     print(cam)
+
+    # Mostrando classificação dos times após as partidas
+    campeonato.mostrar_classificacao()
 
 if __name__ == '__main__':
     main()
