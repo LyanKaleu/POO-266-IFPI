@@ -42,6 +42,11 @@ class ContaCorrente:
     @numero.setter
     def numero(self, novo_numero):
         self.__numero = novo_numero
+    
+    
+    # Método para uso interno, não exige senha    
+    def obter_saldo(self):
+        return self.__saldo
 
     @property
     def saldo(self):
@@ -74,8 +79,9 @@ class ContaPoupanca(ContaCorrente):
         self.__taxa_juros = taxa_juros
 
     def render_juros(self):
-        self.creditar(self.saldo * self.__taxa_juros)
-        print(f'Juros rendidos com sucesso!\nAgora seu saldo atual da conta Nº{self.__numero} é R${self.saldo:.2f}\n')
+        saldo_atual = self.obter_saldo()
+        self.creditar(saldo_atual * self.__taxa_juros)
+        print(f'Juros rendidos com sucesso!\nAgora seu saldo atual da conta Nº{self.numero} é R${self.obter_saldo():.2f}\n')
 
     @property
     def taxa_juros(self):
@@ -95,8 +101,9 @@ class ContaImposto(ContaCorrente):
         self.__percentual_imposto = percentual_imposto
 
     def calcular_imposto(self):
-        self.debitar(self._saldo * self.__percentual_imposto)
-        print(f'Imposto debitado com sucesso!\nAgora seu saldo atual da conta Nº{self.__numero} é R${self._saldo:.2f}\n')
+        saldo_atual = self.obter_saldo()
+        self.debitar(saldo_atual * self.__percentual_imposto)
+        print(f'Imposto debitado com sucesso!\nAgora seu saldo atual da conta Nº{self.numero} é R${self.obter_saldo():.2f}\n')
 
     @property
     def percentual_imposto(self):
@@ -144,9 +151,6 @@ def main():
     cp2.render_juros()
     ci1.calcular_imposto()
     ci2.calcular_imposto()
-    
-
-    
 
 if __name__ == "__main__":
     main()
